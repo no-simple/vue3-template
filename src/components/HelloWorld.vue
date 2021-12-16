@@ -12,6 +12,7 @@
 
 <template>
   <div @click="updateName">{{ userinfo.name }}</div>
+  <el-button>fff</el-button>
 </template>
 
 <style scoped>
