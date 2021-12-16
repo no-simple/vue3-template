@@ -1,15 +1,15 @@
 import { Authority, General } from '@/api/request'
-// import { ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus'
 // import Store from '@/store'
 import Router from '@/router'
-const ElNotification = () => {}
-let handleRequset = (config) => {
+
+let handleRequset = (config: any) => {
   // 在发送请求之前做些什么
   return config
 }
 
 // token过期
-const tokenExpired = (msg) => {
+const tokenExpired = (msg: string): void => {
   ElNotification({
     type: 'error',
     title: '错误',
@@ -19,7 +19,7 @@ const tokenExpired = (msg) => {
 }
 
 // 未授权
-const unAuthorized = (msg) => {
+const unAuthorized = (msg: string): void => {
   ElNotification({
     type: 'error',
     title: '错误',
@@ -28,7 +28,7 @@ const unAuthorized = (msg) => {
 }
 
 // 账号被停用
-const accountLocked = (msg) => {
+const accountLocked = (msg: string): void => {
   ElNotification({
     type: 'error',
     title: '账号已被停用，有疑问可联系管理员',
@@ -36,7 +36,7 @@ const accountLocked = (msg) => {
   })
 }
 
-const servicesCash = () => {
+const servicesCash = (): void => {
   ElNotification({
     type: 'error',
     title: '错误',
@@ -49,7 +49,7 @@ const servicesCash = () => {
 const throwGeneralError = unAuthorized
 
 // 需要处理的code码  黑名单
-const ACTIONS = {
+const ACTIONS: any = {
   401: unAuthorized,
   2: tokenExpired,
   1009: throwGeneralError,
@@ -59,7 +59,7 @@ const ACTIONS = {
 
 const SERVICES_MAP = [500, 502]
 // 拦截resosne处理
-let handleResponse = (response) => {
+let handleResponse = (response: { data: { code: any; message: any } }) => {
   const CODE = response.data.code
   // 若存在对应的操作则进行处理
   ACTIONS[CODE] && ACTIONS[CODE](response.data.message)
@@ -69,7 +69,7 @@ let handleResponse = (response) => {
 }
 
 // 拦截的错误处理
-let handleError = (error) => {
+let handleError = (error: { response: { data: { code: number } } }) => {
   // 对响应错误做点什么
   // 服务器异常捕获
   SERVICES_MAP.includes(error.response.data.code) && servicesCash()

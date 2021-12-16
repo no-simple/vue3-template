@@ -32,4 +32,8 @@
     color: #304455;
   }
 </style>
-v
+<style lang="less" scoped>
+  .a {
+    color: red;
+  }
+</style>
