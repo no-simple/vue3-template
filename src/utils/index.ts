@@ -1,14 +1,11 @@
-// import { Notification } from 'element-ui'
-
 // 节流函数 规定时间内只触发一次
-export const throttle = (fn, delay = 5000, immediate = false) => {
+export const throttle = (fn: Function, delay = 5000, immediate = false) => {
   // 利用闭包保存定时器
   let prve = Date.now()
-  return function () {
-    let context = this
+  return (...args: any) => {
     let now = Date.now()
     if (immediate || now - prve >= delay) {
-      fn.apply(context, arguments)
+      fn.apply(this, args)
       immediate = false
       prve = Date.now()
     } else {
@@ -22,21 +19,19 @@ export const throttle = (fn, delay = 5000, immediate = false) => {
 }
 
 // 防抖函数 连续多次触发只保证最后一次生效
-export const debounce = (fn, delay = 5000, immediate = false) => {
+export const debounce = (fn: Function, delay = 5000, immediate = false) => {
   // 利用闭包保存定时器
-  let timer = null
-  return function () {
-    let context = this
-    clearTimeout(timer)
+  let timer: number | null = null
+  return (...args: any) => {
+    timer && clearTimeout(timer)
     if (immediate) {
-      let callNow = !timer
-      timer = setTimeout(() => {
+      timer = window.setTimeout(() => {
         timer = null
       }, delay)
-      callNow && fn.apply(context, arguments)
+      !timer && fn.apply(this, args)
     } else {
-      timer = setTimeout(function () {
-        fn.apply(context, arguments)
+      timer = window.setTimeout(() => {
+        fn.apply(this, args)
       }, delay)
     }
   }
@@ -47,7 +42,9 @@ export const debounce = (fn, delay = 5000, immediate = false) => {
  * @param {*} len 生成的长度
  * @param {*} include 1(大写) 2(小写) 3(大小写) 4(数字) 5(大写及数字) 6(小写及数字) 7(大小写及数字)
  */
-export const randomString = (len, include) => {
+
+type Include = 1 | 2 | 3 | 4 | 5 | 6 | 7
+export const randomString = (len: Number, include: Include) => {
   const UPPERCASE = 1 // 包含大写字母
   const LOWERCASE = 2 // 包含小写字母
   const NUMBER = 4 // 包含数字
@@ -79,23 +76,26 @@ export const randomString = (len, include) => {
 }
 
 // 获取获取[m，n]区间内的随机整数
-export const getRamdom = (m, n) => {
+export const getRamdom = (m: number, n: number) => {
   const aNumber = (n + 1 - m) * Math.random() + m
   const result = Math.floor(aNumber)
   return result
 }
 
 // 从字符串中查找根据key  查找value  str:  'filename=档案.xlsx;fileType=stream'
-export const getValue = (str = '', key) => {
+export const getValue = (str: string = '', key: string): string => {
   const list = str.split(';')
   let item = list.find((x) => x.includes(key + '='))
-  return item ? item.split('=')[1] : null
+  return item ? item.split('=')[1] : ''
 }
 
+interface Reader {
+  [propName: string]: any
+}
 // 二进制流文件转换为json
-export const blobToJSON = (data) => {
+export const blobToJSON = (data: Blob) => {
   return new Promise((resolve) => {
-    let reader = new FileReader()
+    let reader: Reader = new FileReader()
     reader.readAsText(data, 'utf-8')
     reader.onload = function () {
       try {
@@ -112,7 +112,7 @@ export const blobToJSON = (data) => {
 
 // 路由中存在 /unit-registration/:id?  等路由结构，需在分割以后取第一个数组值
 // 默认所有一级路由 在带一个斜杠
-export const getRootUrl = (path) => path.split('/:')[0]
+export const getRootUrl = (path: string) => path.split('/:')[0]
 
 /**
  * 千分位分隔符, 并格式化两位小数

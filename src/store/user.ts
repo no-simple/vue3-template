@@ -9,5 +9,7 @@ export const userStore = defineStore({
     increment() {
       this.name = 'xxxxxxxxxxxx'
     },
+    // 登出
+    logout() {},
   },
 })

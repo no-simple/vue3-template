@@ -2,9 +2,11 @@
  *  将ajax获取的二进制流转换生成excel文件并下载
  *  文件流写入excel,从而实现该excel文件的下载
  **/
-// import format from './format'
-
-export default function handleStream({ filename, data }) {
+interface StreamParams {
+  filename: string
+  data: Blob
+}
+export default function handleStream({ filename, data }: StreamParams) {
   const blob = new Blob([data])
   // const time = format(new Date()).substring(0, 10)
   // const fileName = `${name}${time}.xls`
@@ -21,6 +23,7 @@ export default function handleStream({ filename, data }) {
     document.body.removeChild(elink)
   } else {
     // IE10+下载
+    // @ts-ignore
     navigator.msSaveBlob(blob, filename)
   }
 }

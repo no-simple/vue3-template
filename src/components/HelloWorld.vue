@@ -32,8 +32,9 @@
     color: #304455;
   }
 </style>
-<style lang="less" scoped>
-  .a {
+
+<style lang="scss">
+  div {
     color: red;
   }
 </style>
