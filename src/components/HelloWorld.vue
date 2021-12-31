@@ -1,18 +1,28 @@
 <script setup lang="ts">
+  import { getTenantId } from '@/api/login'
   import { userStore } from '@/store/user'
+
+  const queryTeant = async () => {
+    const { data } = await getTenantId({ tenantSign: 'zunyi' })
+    console.log(data)
+  }
 
   const userinfo = userStore()
 
   const updateName = () => {
-    userinfo.$patch({
-      name: 'yuxi',
-    })
+    queryTeant()
+    queryTeant()
+    queryTeant()
+    queryTeant()
+    setTimeout(() => {
+      queryTeant()
+    }, 1000)
   }
 </script>
 
 <template>
-  <div @click="updateName">{{ userinfo.name }}</div>
-  <el-button>fff</el-button>
+  <div>{{ userinfo.name }}</div>
+  <el-button @click="updateName">fff</el-button>
 </template>
 
 <style scoped>

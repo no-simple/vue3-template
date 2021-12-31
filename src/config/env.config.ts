@@ -12,7 +12,7 @@ switch (import.meta.env.VUE_APP_ENV) {
     break
   // 默认开发
   default:
-    constUrl = 'https://tc.lookdoor.cn:1999'
+    constUrl = 'https://xbigtest.lookdoor.cn:20000'
 }
 
 export default constUrl

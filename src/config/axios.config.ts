@@ -2,13 +2,11 @@ import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { Authority, General } from '@/api/request'
 import { ElNotification } from 'element-plus'
-import { userStore as _userStore } from '@/store/user'
+import { userStore } from '@/store/user'
 import md5 from 'md5'
 // import Router from '@/router'
 import { getValue, blobToJSON, throttle } from '@/utils'
 import handleStream from '@/utils/handle-stream'
-
-const userStore = _userStore()
 
 interface Pending {
   [propName: string]: any
@@ -25,17 +23,17 @@ let handleRequest = (config: AxiosRequestConfig) => {
   let key = md5(
     `${config.url}&${config.method}&${JSON.stringify(config.data)}&${JSON.stringify(config.params)}`
   )
-  config.cancelToken = new CancelToken(() => {
-    // if (pending[key]) {
-    //   if (Date.now() - pending[key] > 1) {
-    //     // 超过5s，删除对应的请求记录，重新发起请求
-    //     delete pending[key]
-    //   } else {
-    //     console.log('重复接口', config.url)
-    //     // 5s以内的已发起请求，取消重复请求
-    //     c('请勿重复提交')
-    //   }
-    // }
+  config.cancelToken = new CancelToken((cancel) => {
+    if (pending[key]) {
+      if (Date.now() - pending[key] > 5000) {
+        // 超过5s，删除对应的请求记录，重新发起请求
+        delete pending[key]
+      } else {
+        console.log('重复接口', config.url)
+        // 5s以内的已发起请求，取消重复请求
+        cancel('请勿重复提交')
+      }
+    }
     // 不存在记录当前的请求，并设置时间戳
     pending[key] = Date.now()
   })
@@ -43,7 +41,7 @@ let handleRequest = (config: AxiosRequestConfig) => {
 }
 
 // token过期 加入节流处理
-const tokenExpired = throttle(() => userStore.logout(), 2000, true)
+const tokenExpired = throttle(() => userStore().logout(), 2000, true)
 
 interface Action {
   [propName: number]: Function
