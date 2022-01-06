@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { getTenantId } from '@/api/login'
+  import { getTenantId } from '@/api/module/login'
   import { userStore } from '@/store/user'
 
   const queryTeant = async () => {
